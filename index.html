@@ -117,7 +117,7 @@
                     this.total = res.data.total
                     this.list.forEach((item) => {
                         item.cover = JSON.parse(item.cover)[0]
-                        item.title = item.title.replace('喷水','<span v-pre style="color: red">喷水</span>')
+                        item.title = item.title.replace(this.keyword,`<span v-pre style="color: red">${this.keyword}</span>`)
                     })
                 })
 
