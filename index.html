@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>emmmmmmm</title>
+    <title>绯想剑</title>
     <link rel="icon" href="static/favicon.ico" type="image/png" >
 
     <script src="static/vue.js"></script>
@@ -19,16 +19,15 @@
         <el-col :xl="{span:8,offset:8}" :lg="{span:10,offset:7}" :sm="{span:12,offset:6}" >
             <el-row>
                 <el-col :span="8">
-                    <el-autocomplete
+                    <el-input
                             class="inline-input"
                             prefix-icon="el-icon-search"
                             v-model="keyword"
-                            :fetch-suggestions="querySearch"
-                            placeholder="请输入名称"
+                            placeholder="请输入标题"
                             :trigger-on-focus="false"
                             @select="select"
                             @input="input"
-                    ></el-autocomplete>
+                    ></el-input>
                 </el-col>
             </el-row>
             <el-table
@@ -57,7 +56,7 @@
                         label="操作"
                         width="120">
                     <template slot-scope="scope">
-                        <el-button @click="buy(scope.row)" type="success" >待开发</el-button>
+                        <el-button @click="open(scope.row)" type="success" >打开</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -73,8 +72,8 @@
 </div>
 <script>
 
-    // let baseUrl = "http://localhost:8989/pages"
-    let baseUrl = "https://www.aslucky.club/pages"
+    let baseUrl = "http://localhost:8989/pages"
+    // let baseUrl = "https://www.aslucky.club/pages"
 
 
 
@@ -89,28 +88,14 @@
         },
         mounted(){
 
-          axios.get(baseUrl + "/list").then(res => {
-            console.log(this.list = res.data)
 
-            this.list.forEach((item) => {
-              item.cover = JSON.parse(item.cover)[0]
-            })
-
-          })
-
+            this.update()
 
         },
         methods: {
             handleCurrentChange(val) {
                 this.current = val
                 this.update()
-            },
-            querySearch (queryString, cb) {
-                queryString = queryString.toUpperCase().trim();
-                let results = this.itemListSrc.filter((item) => {
-                    return item.itemName.indexOf(queryString) === 0
-                })
-                cb(results);
             },
             select(){
                 this.current = 1
@@ -121,20 +106,19 @@
                 this.update()
             },
             update(){
-                if (this.keyword){
-                    let keyword = this.keyword.toUpperCase().trim()
-                    this.itemList = this.itemListSrc.filter(item => {
-                        return item.value.indexOf(keyword) > -1
+
+                axios.get(baseUrl + `/list/10/${this.current}?keyword=${this.keyword}`).then(res => {
+                    this.list = res.data.list
+                    this.total = res.data.total
+                    this.list.forEach((item) => {
+                        item.cover = JSON.parse(item.cover)[0]
                     })
-                }else {
-                    this.itemList = this.itemListSrc
-                }
-
-                this.total = this.itemList.length
-
-                this.itemList = this.itemList.slice((this.current - 1)*6,this.current * 6)
+                })
 
 
+            }
+            ,open(row){
+                open(`https://www.aiacj9.space/${row.uri}`)
             }
             ,getQueryVariable(variable) {
                 var query = window.location.search.substring(1);
