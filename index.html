@@ -14,7 +14,6 @@
 <body>
 <div id="app" style="margin-top: 5%" v-loading="loading">
 
-
     <el-row>
         <el-col :xl="{span:8,offset:8}" :lg="{span:10,offset:7}" :sm="{span:12,offset:6}" >
             <el-row>
@@ -119,9 +118,12 @@
                         item.cover = JSON.parse(item.cover)[0]
                         item.title = item.title.replace(this.keyword,`<span v-pre style="color: red">${this.keyword}</span>`)
                     })
+                    this.loading = false
+                }).catch(err => {
+                    this.loading = false
                 })
 
-                this.loading = false
+
             }
             ,open(row){
                 open(`https://www.aiacj9.space/${row.uri}`)
