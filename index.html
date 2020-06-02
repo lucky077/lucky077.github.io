@@ -111,7 +111,7 @@
                 this.update()
             },
             update(){
-
+                this.loading = true
                 axios.get(baseUrl + `/list/10/${this.current}?keyword=${this.keyword}`).then(res => {
                     this.list = res.data.list
                     this.total = res.data.total
@@ -121,7 +121,7 @@
                     })
                 })
 
-
+                this.loading = false
             }
             ,open(row){
                 open(`https://www.aiacj9.space/${row.uri}`)
